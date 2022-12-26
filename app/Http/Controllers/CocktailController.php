@@ -24,7 +24,7 @@ class CocktailController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Main/Result');
     }
 
     /**
@@ -33,9 +33,30 @@ class CocktailController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+
+    public function handleQuestion(Request $request)
     {
-        //
+        $params = $request->all();
+        $url = $request->fullUrl();
+
+        // クライアントインスタンス作成
+        $client = new \GuzzleHttp\Client();
+
+        // GET通信するURL
+        $baseUrl = "https://cocktail-f.com/api/v1/cocktails";
+        $response = $client->request(
+            'GET',
+            $baseUrl,
+            ['query' => $params,
+            'on_stats' => function (\GuzzleHttp\TransferStats $stats) use (&$queryUrl) {
+                $queryUrl = $stats->getEffectiveUri();
+                // dd($queryUrl);
+            }]);
+
+
+        $cocktailsData = json_decode($response->getBody(), true);
+
+        return Inertia::render('Main/Result', ["cocktailsData" => $cocktailsData]);
     }
 
     /**
