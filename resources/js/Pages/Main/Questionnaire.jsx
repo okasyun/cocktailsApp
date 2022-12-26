@@ -3,6 +3,7 @@ import { Head } from "@inertiajs/inertia-react";
 import { useState } from "react";
 
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Slider from "@mui/material/Slider";
 
@@ -15,35 +16,47 @@ import {
     styleOptions,
     topOptions,
     glassOptions,
-} from "/resources/data/selectOptionsData";
+} from "/resources/js/data/selectOptionsData";
 import SelectInput from "@/OriginComponents/SelectInput";
+import { Inertia } from "@inertiajs/inertia";
+import { Link } from "@inertiajs/inertia-react";
 
 const Questionnaire = (props) => {
-    const [base, setBase] = useState("");
-    const [technique, setTechnique] = useState("");
-    const [taste, setTaste] = useState("");
-    const [style, setStyle] = useState("");
+    const { errors, auth } = props;
+    const [base, setBase] = useState(null);
+    const [technique, setTechnique] = useState(null);
+    const [taste, setTaste] = useState(null);
+    const [style, setStyle] = useState(null);
     const [alcohol, setAlcohol] = useState([0, 20]);
-    const [top, setTop] = useState("");
-    const [glass, setGlass] = useState("");
+    const [top, setTop] = useState(null);
+    const [glass, setGlass] = useState(null);
 
     const alcoholChange = (event, newValue) => {
         setAlcohol(newValue);
-        console.log(alcohol);
     };
 
     const alcoholChangeText = (alcohol) => {
         return `${alcohol}o`;
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = (e) => {
+        const values = {
+            base: base,
+            technique: technique,
+            taste: taste,
+            style: style,
+            alcohol_from: alcohol[0],
+            alcohol_to: alcohol[1],
+            top: top,
+            glass: glass,
+        };
         e.preventDefault();
-        setData(evene.target.value);
+        Inertia.post("/cocktails/result", values);
     };
     return (
         <Authenticated
-            auth={props.auth}
-            errors={props.errors}
+            auth={auth}
+            errors={errors}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
                     アンケート
@@ -61,8 +74,9 @@ const Questionnaire = (props) => {
                 </div>
             </div>
             <CssBaseline />
+            <Link href={route("result")}>カクテル表示結果</Link>
             <Box
-                component="main"
+                component="form"
                 maxWidth="xs"
                 sx={{
                     display: "flex",
@@ -71,6 +85,7 @@ const Questionnaire = (props) => {
                     flexDirection: "column",
                     gap: "20px",
                 }}
+                onSubmit={handleSubmit}
             >
                 <SelectInput
                     label="ベース"
@@ -118,6 +133,9 @@ const Questionnaire = (props) => {
                         getAriaValueText={alcoholChangeText}
                     />
                 </FormControl>
+                <Button variant="contained" type="submit">
+                    送信
+                </Button>
             </Box>
         </Authenticated>
     );

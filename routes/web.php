@@ -38,5 +38,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('cocktails/questionnaire',[CocktailController::class, 'index'])->name('questionnaire')->middleware('auth');
+// Route::get('cocktails/result',[CocktailController::class, 'create'])->name('result')->middleware('auth');
+Route::post('cocktails/result',[CocktailController::class, 'handleQuestion'])->name('result')->middleware('auth');
 
 require __DIR__.'/auth.php';
