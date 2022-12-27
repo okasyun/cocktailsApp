@@ -31,6 +31,8 @@ const Questionnaire = (props) => {
     const [top, setTop] = useState(null);
     const [glass, setGlass] = useState(null);
 
+    console.log(base);
+
     const alcoholChange = (event, newValue) => {
         setAlcohol(newValue);
     };
