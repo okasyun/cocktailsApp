@@ -1,14 +1,17 @@
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/inertia-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Inertia } from "@inertiajs/inertia";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
 import CssBaseline from "@mui/material/CssBaseline";
 import Slider from "@mui/material/Slider";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
-import { FormControl } from "@mui/material";
-import { Typography } from "@mui/material";
+import SelectInput from "@/OriginComponents/SelectInput";
 import {
     baseOptions,
     techniqueOptions,
@@ -17,9 +20,6 @@ import {
     topOptions,
     glassOptions,
 } from "/resources/js/data/selectOptionsData";
-import SelectInput from "@/OriginComponents/SelectInput";
-import { Inertia } from "@inertiajs/inertia";
-import { Link } from "@inertiajs/inertia-react";
 
 const Questionnaire = (props) => {
     const { errors, auth } = props;
@@ -31,15 +31,36 @@ const Questionnaire = (props) => {
     const [top, setTop] = useState(null);
     const [glass, setGlass] = useState(null);
 
-    console.log(base);
+    const [alcoholDisabled, setAlcoholDisabled] = useState(true);
+
+    const marks = [
+        { value: 0, label: "0%" },
+        { value: 100, label: "100%" },
+    ];
+
+    const alcoholIsChange = (event) => {
+        setAlcoholDisabled(!alcoholDisabled);
+    };
+
+    console.log(alcoholDisabled);
 
     const alcoholChange = (event, newValue) => {
         setAlcohol(newValue);
     };
 
-    const alcoholChangeText = (alcohol) => {
-        return `${alcohol}o`;
+    const alcoholValueLabelFormat = (alcohol) => {
+        return `${alcohol}%`;
     };
+
+    const alcoholValueText = (value) => {
+        return `${value}%`;
+    };
+
+    useEffect(() => {
+        if (alcoholDisabled === false) {
+            setAlcohol([null, null]);
+        }
+    }, [alcoholDisabled]);
 
     const handleSubmit = (e) => {
         const values = {
@@ -76,13 +97,11 @@ const Questionnaire = (props) => {
                 </div>
             </div>
             <CssBaseline />
-            <Link href={route("result")}>カクテル表示結果</Link>
             <Box
                 component="form"
                 maxWidth="xs"
                 sx={{
                     display: "flex",
-                    justifyContent: "center",
                     alignItems: "center",
                     flexDirection: "column",
                     gap: "20px",
@@ -127,12 +146,24 @@ const Questionnaire = (props) => {
                 />
 
                 <FormControl sx={{ width: "50%" }}>
-                    <Typography gutterBottom>アルコール度数</Typography>
+                    <FormControlLabel
+                        label="アルコール度数"
+                        control={
+                            <Checkbox
+                                checked={alcoholDisabled}
+                                onChange={alcoholIsChange}
+                                inputProps={{ "aria-label": "controlled" }}
+                            />
+                        }
+                    />
                     <Slider
+                        disabled={!alcoholDisabled}
                         value={alcohol}
                         onChange={alcoholChange}
+                        getAriaValueText={alcoholValueText}
                         valueLabelDisplay="auto"
-                        getAriaValueText={alcoholChangeText}
+                        valueLabelFormat={alcoholValueLabelFormat}
+                        marks={marks}
                     />
                 </FormControl>
                 <Button variant="contained" type="submit">

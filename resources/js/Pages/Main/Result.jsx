@@ -1,5 +1,6 @@
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/inertia-react";
+import { Link } from "@inertiajs/inertia-react";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import Box from "@mui/material/Box";
@@ -53,6 +54,8 @@ const Result = (props) => {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
+                        flexDirection: "column",
+                        gap: "50px",
                     }}
                 >
                     <h1>Result</h1>
@@ -88,7 +91,10 @@ const Result = (props) => {
                     ))}
                 </Box>
             ) : (
-                <div>データがありませんでした</div>
+                <>
+                    <div>条件にあるカクテルが1つもありませんでした</div>
+                    <Link href={route("questionnaire")}>戻る</Link>
+                </>
             )}
         </Authenticated>
     );
