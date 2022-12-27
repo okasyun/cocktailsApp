@@ -49,12 +49,10 @@ const Result = (props) => {
                 <Box
                     component="main"
                     sx={{
-                        bgcolor: "red",
                         width: "700px",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        flexDirection: "column",
                     }}
                 >
                     <h1>Result</h1>
