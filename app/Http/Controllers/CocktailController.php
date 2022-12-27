@@ -39,6 +39,8 @@ class CocktailController extends Controller
         $params = $request->all();
         $url = $request->fullUrl();
 
+
+
         // クライアントインスタンス作成
         $client = new \GuzzleHttp\Client();
 

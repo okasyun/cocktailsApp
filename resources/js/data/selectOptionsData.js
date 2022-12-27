@@ -14,9 +14,10 @@ export const baseOptions = [
 ];
 
 export const techniqueOptions = [
-    { id: 1, value: 1, label: "ビルド" },
-    { id: 2, value: 2, label: "ステア" },
-    { id: 3, value: 3, label: "シェイク" },
+    { id: 1, value: null, label: "指定なし" },
+    { id: 2, value: 1, label: "ビルド" },
+    { id: 3, value: 2, label: "ステア" },
+    { id: 4, value: 3, label: "シェイク" },
 ];
 
 export const tasteOptions = [
