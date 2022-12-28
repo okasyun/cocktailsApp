@@ -63,6 +63,7 @@ const Questionnaire = (props) => {
     }, [alcoholDisabled]);
 
     const handleSubmit = (e) => {
+        e.preventDefault();
         const values = {
             base: base,
             technique: technique,
@@ -73,8 +74,7 @@ const Questionnaire = (props) => {
             top: top,
             glass: glass,
         };
-        e.preventDefault();
-        Inertia.post("/cocktails/result", values);
+        Inertia.post("/cocktails/questionnaire", values);
     };
     return (
         <Authenticated
