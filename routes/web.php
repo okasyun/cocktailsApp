@@ -37,8 +37,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('cocktails/questionnaire',[CocktailController::class, 'index'])->name('questionnaire')->middleware('auth');
-// Route::get('cocktails/result',[CocktailController::class, 'create'])->name('result')->middleware('auth');
-Route::post('cocktails/result',[CocktailController::class, 'handleQuestion'])->name('result')->middleware('auth');
+Route::get('cocktails/questionnaire',[CocktailController::class, 'questionnaireDisplay'])->name('questionnaire')->middleware('auth');
+Route::post('cocktails/questionnaire',[CocktailController::class, 'questionnaireResult'])->name('questionnaire')->middleware('auth');
+
+Route::get('cocktails/search', [CocktailController::class, 'searchDisplay'])->name('search')->middleware('auth');
+Route::post('cocktails/search', [CocktailController::class, 'searchResult'])->name('search')->middleware('auth');
 
 require __DIR__.'/auth.php';
