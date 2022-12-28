@@ -8,43 +8,32 @@ use Inertia\Inertia;
 class CocktailController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * アンケートページの表示
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function questionnaireDisplay()
     {
         return Inertia::render('Main/Questionnaire');
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * アンケートのリクエストパラメータをカクテルAPIに送信
+     * APIのレスポンスを返す
+     * @param Request $request
+     * @return void
      */
-    public function create()
+    public function questionnaireResult(Request $request)
     {
-        return Inertia::render('Main/Result');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-
-    public function handleQuestion(Request $request)
-    {
-        $params = $request->all();
+        $onlyParameter = [
+            'base', 'technique', 'taste', 'style', 'alcohol_from', 'alcohol_to', 'top', 'glass'
+        ];
+        $params = $request->only($onlyParameter);
         $url = $request->fullUrl();
+        // 例外処理
 
-
-
-        // クライアントインスタンス作成
         $client = new \GuzzleHttp\Client();
 
-        // GET通信するURL
         $baseUrl = "https://cocktail-f.com/api/v1/cocktails";
         $response = $client->request(
             'GET',
@@ -52,13 +41,50 @@ class CocktailController extends Controller
             ['query' => $params,
             'on_stats' => function (\GuzzleHttp\TransferStats $stats) use (&$queryUrl) {
                 $queryUrl = $stats->getEffectiveUri();
-                // dd($queryUrl);
             }]);
-
 
         $cocktailsData = json_decode($response->getBody(), true);
 
-        return Inertia::render('Main/Result', ["cocktailsData" => $cocktailsData]);
+        return Inertia::render('Main/QuestionnaireResult', ["cocktailsData" => $cocktailsData]);
+    }
+
+    /**
+     * カクテル検索の表示
+     *
+     * @return void
+     */
+    public function searchDisplay () 
+    {
+        return Inertia::render('Main/Search');
+    }
+
+    /**
+     * 検索のリクエストパラメータをカクテルAPIに渡す
+     * APIのレスポンスを渡す
+     * @param mixed $name
+     * @return mixed
+     */
+
+    public function searchResult (Request $request)
+    {
+        $param = $request->only('word');
+        // dd($param);
+
+        $client = new \GuzzleHttp\Client();
+
+        $baseUrl =  'https://cocktail-f.com/api/v1/cocktails';
+        $response = $client->request(
+            'GET',
+            $baseUrl,
+            ['query' => $param,
+            'on_stats' => function (\GuzzleHttp\TransferStats $stats) use (&$queryUrl) {
+                $queryUrl = $stats->getEffectiveUri();
+                // dd($queryUrl);
+            }]);
+            
+        $cocktailsData = json_decode($response->getBody(), true);
+
+        return Inertia::render("Main/SearchResult", ["cocktailsData" => $cocktailsData]);
     }
 
     /**
