@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->tinyInteger('age');
-            $table->string('profile_image_path');
+            // $table->tinyInteger('age'); //　今後追加する
+            // $table->string('profile_image_path');
             $table->rememberToken();
             $table->timestamps();
         });

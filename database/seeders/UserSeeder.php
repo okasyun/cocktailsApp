@@ -19,8 +19,8 @@ class UserSeeder extends Seeder
             'name'=> '岡本',
             'email'=> 'sample@gmail.com',
             'password'=> 'okashun1207',
-            'age'=> 37,
-            'profile_image_path'=> 'sample.png',
+            // 'age'=> 37,
+            // 'profile_image_path'=> 'sample.png',
         ]);
     }
 }
