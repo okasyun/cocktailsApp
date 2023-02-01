@@ -18,7 +18,6 @@ class ChatController extends Controller
     public function sendMessage(Request $request)
     {
 
-        dd($request);
         // $user = Auth::user();
         // $user = auth()->user();
         // User::find(1);
@@ -29,7 +28,9 @@ class ChatController extends Controller
     
         // DBにメッセージを保存
         $message = $user->messages()->create([
-            'message' => $request['message']
+            'title' => $request['title'],
+            'content_text' => $request['content_text'],
+            'content_image_path' => $request['content_image_path']
         ]);
     }
 }
