@@ -26,6 +26,7 @@ const Chats = ({ auth, errors }) => {
     // TODO:inertiaではなくaxiosで受け取る
     const getChatMessages = async () => {
         const res = await axios.get(route("cocktails.chat.fetch"));
+        console.log(res.data);
         setMessages(res.data);
     };
 
