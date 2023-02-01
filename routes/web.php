@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CocktailController;
 use Illuminate\Foundation\Application;
@@ -31,16 +32,29 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+Route::middleware('auth')->group(function () 
+{
+    Route::name('profile.')->group(function() {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::group(['prefix' => 'cocktails', 'as' => "cocktails."], function () {
+        Route::get('questionnaire',[CocktailController::class, 'questionnaireDisplay'])->name('questionnaireDisplay'); // route('cocktails.questionnaire')
+        Route::post('questionnaire/result',[CocktailController::class, 'questionnaireResult'])->name('questionnaireResult');
+        Route::get('search', [CocktailController::class, 'searchDisplay'])->name('searchDisplay');
+        Route::post('search', [CocktailController::class, 'searchResult'])->name('searchResult');
+        Route::post('favorite', [CocktailController::class, 'addFavorite'])->name('favorite');
+        Route::get('favoriteList', [CocktailController::class, 'favoriteListDisplay'])->name('favoriteList');
+
+        Route::inertia('/chat', "Chats/Chats")->name('chat.index');
+        Route::get('/messages', [ChatController::class, 'fetchMessages'])->name('chat.fetch');
+        Route::post('/messages', [ChatController::class, 'sendMessage'])->name('chat.store');
+    });
+
 });
-
-Route::get('cocktails/questionnaire',[CocktailController::class, 'questionnaireDisplay'])->name('questionnaire')->middleware('auth');
-Route::post('cocktails/questionnaire',[CocktailController::class, 'questionnaireResult'])->name('questionnaire')->middleware('auth');
-
-Route::get('cocktails/search', [CocktailController::class, 'searchDisplay'])->name('search')->middleware('auth');
-Route::post('cocktails/search', [CocktailController::class, 'searchResult'])->name('search')->middleware('auth');
 
 require __DIR__.'/auth.php';

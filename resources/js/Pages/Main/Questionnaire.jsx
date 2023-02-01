@@ -42,8 +42,7 @@ const Questionnaire = (props) => {
         setAlcoholDisabled(!alcoholDisabled);
     };
 
-    console.log(alcoholDisabled);
-
+    console.log(alcohol);
     const alcoholChange = (event, newValue) => {
         setAlcohol(newValue);
     };
@@ -74,7 +73,7 @@ const Questionnaire = (props) => {
             top: top,
             glass: glass,
         };
-        Inertia.post("/cocktails/questionnaire", values);
+        Inertia.post(route("cocktails.questionnaireResult"), values);
     };
     return (
         <Authenticated

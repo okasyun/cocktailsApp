@@ -9,24 +9,42 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+import IconButton from "@mui/material/IconButton";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import StarIcon from "@mui/icons-material/Star";
+import { Inertia } from "@inertiajs/inertia";
+import axios from "axios";
 
 const Result = (props) => {
     // TODO: GETメソッドの時にrequestパラメータが定義されていなくてエラーになる
-
+    const [favorite, setFavorite] = useState(null);
     const { cocktailsData, errors, auth } = props;
 
-    const [cocktailsDatais, setCocktailsDataIs] = useState(false);
+    //TODO:useeffect使う必要ない
+    // const [cocktailsIs, setCocktailsIs] = useState(true);
 
-    // カクテルの配列
     const cocktails = cocktailsData.cocktails;
+    const [cocktailsIs, setCocktailsIs] = useState(() => {
+        return cocktails.length != 0;
+    });
+    // useEffect(() => {
 
-    let cocktailsIs = false;
+    //     cocktails.length ? setCocktailsIs(true) : setCocktailsIs(false);
+    // }, [cocktailsIs]);
 
-    cocktailsIs = cocktails.length ? true : false;
+    const handleClick = (e, cocktail_id, cocktail_name) => {
+        // console.log(cocktail_id);
+        e.preventDefault();
+        const value = {
+            cocktail_id: cocktail_id,
+            cocktail_name: cocktail_name,
+        };
+        // Inertia.post("/cocktails/favorite", value);
+        axios.post("/cocktails/favorite", value);
+    };
 
-    console.log(props);
-    console.log(cocktails);
     return (
         <Authenticated
             auth={auth}
@@ -65,38 +83,56 @@ const Result = (props) => {
                     <h1>リクエスト</h1>
 
                     {cocktails.map((cocktail) => (
-                        <Card
-                            key={cocktail.cocktail_id}
-                            sx={{ width: "300px" }}
+                        <form
+                            onSubmit={(e) =>
+                                handleClick(
+                                    e,
+                                    cocktail.cocktail_id,
+                                    cocktail.cocktail_name
+                                )
+                            }
                         >
-                            <CardContent>
-                                <Typography
-                                    sx={{ fontSize: 14 }}
-                                    color="text.secondary"
-                                    gutterBottom
-                                >
-                                    {`${cocktail.cocktail_name}/${cocktail.cocktail_name_english}`}
-                                </Typography>
-                                <Typography variant="body2">
-                                    {cocktail.cocktail_digest}
-                                </Typography>
-                                <ul>
-                                    <li>{`ベース：${cocktail.base_name}`}</li>
-                                    <li>{`技法：${cocktail.technique_name}`}</li>
-                                    <li>{`味わい：${cocktail.taste_name}`}</li>
-                                    <li>{`スタイル：${cocktail.style_name}`}</li>
-                                    <li>{`アルコール度数：${cocktail.alcohol}%`}</li>
-                                    <li>{`TOP:${cocktail.top_name}`}</li>
-                                    <li>{`グラス：${cocktail.glass_name}`}</li>
-                                </ul>
-                            </CardContent>
-                        </Card>
+                            <Card
+                                key={cocktail.cocktail_id}
+                                sx={{ width: "300px" }}
+                            >
+                                <CardContent>
+                                    <Typography
+                                        sx={{ fontSize: 14 }}
+                                        color="text.secondary"
+                                        gutterBottom
+                                    >
+                                        {`${cocktail.cocktail_name}/${cocktail.cocktail_name_english}`}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        {cocktail.cocktail_digest}
+                                    </Typography>
+                                    <ul>
+                                        <li>{`ベース：${cocktail.base_name}`}</li>
+                                        <li>{`技法：${cocktail.technique_name}`}</li>
+                                        <li>{`味わい：${cocktail.taste_name}`}</li>
+                                        <li>{`スタイル：${cocktail.style_name}`}</li>
+                                        <li>{`アルコール度数：${cocktail.alcohol}%`}</li>
+                                        <li>{`TOP:${cocktail.top_name}`}</li>
+                                        <li>{`グラス：${cocktail.glass_name}`}</li>
+                                    </ul>
+                                    <IconButton
+                                        type="submit"
+                                        aria-label="star-white"
+                                    >
+                                        <StarBorderIcon />
+                                    </IconButton>
+                                </CardContent>
+                            </Card>
+                        </form>
                     ))}
                 </Box>
             ) : (
                 <>
                     <div>条件にあるカクテルが1つもありませんでした</div>
-                    <Link href={route("questionnaire")}>戻る</Link>
+                    <Link href={route("cocktails.questionnaireDisplay")}>
+                        戻る
+                    </Link>
                 </>
             )}
         </Authenticated>

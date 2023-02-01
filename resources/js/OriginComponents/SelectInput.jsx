@@ -15,7 +15,11 @@ const SelectInput = (props) => {
                 >
                     {options.map((data) => {
                         return (
-                            <MenuItem id={data.id} value={data.value}>
+                            <MenuItem
+                                key={data.id}
+                                id={data.id}
+                                value={data.value}
+                            >
                                 {data.label}
                             </MenuItem>
                         );

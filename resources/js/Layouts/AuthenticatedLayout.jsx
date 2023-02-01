@@ -31,18 +31,34 @@ export default function Authenticated({ auth, header, children }) {
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink
-                                    href={route("questionnaire")}
-                                    active={route().current("questionnaire")}
+                                    href={route(
+                                        "cocktails.questionnaireDisplay"
+                                    )}
+                                    active={route().current(
+                                        "cocktails.questionnaireDisplay"
+                                    )}
                                 >
                                     カクテルアンケート
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink
-                                    href={route("search")}
-                                    active={route().current("search")}
+                                    href={route("cocktails.searchDisplay")}
+                                    active={route().current(
+                                        "cocktails.searchDisplay"
+                                    )}
                                 >
                                     カクテル検索
+                                </NavLink>
+                            </div>
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink
+                                    href={route("cocktails.favoriteList")}
+                                    active={route().current(
+                                        "cocktails.favoriteList"
+                                    )}
+                                >
+                                    お気に入りカクテル
                                 </NavLink>
                             </div>
                         </div>
